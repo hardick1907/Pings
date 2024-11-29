@@ -26,7 +26,7 @@ Pings is a collaborative messaging platform enabling real-time communication wit
    ```  
 2. Install dependencies:  
    ```bash  
-   npm install  
+   npm run build  
    ```  
 3. Set up the `.env` file with the following keys:  
    ```env  
