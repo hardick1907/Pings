@@ -1,0 +1,13 @@
+{
+  "name": "pings",
+  "version": "1.0.0",
+  "description": "Pings is a collaborative messaging platform enabling real-time communication within dynamic, user-created chat rooms. Designed for seamless scalability and user experience, Pings includes robust API endpoints and a feature-rich front-end for a modern chat application.",
+  "main": "index.js",
+  "scripts": {
+    "build":"npm install --prefix Backend && npm install --prefix Frontend && npm run build --prefix Frontend",
+    "start":"npm run start --prefix Backend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
