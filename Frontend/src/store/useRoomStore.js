@@ -11,6 +11,7 @@ export const useRoomStore = create((set,get) => ({
   isMessageSending: false,
   isMessagesLoading: false,
   selectedRoom: null,
+  currentMemberCount: 0,
 
   createRoom: async (data) => {
     set({ isRoomAdding: true });
@@ -40,10 +41,19 @@ export const useRoomStore = create((set,get) => ({
   joinRoom: async (roomId) => {
     try {
       const res = await axiosInstance.post(`/room/rooms/${roomId}/join`);
+      
+      // Only show success toast if room is successfully joined
       toast.success("Room joined successfully");
+      return res.data; // Return room data for navigation
     } catch (error) {
-      toast(error.response.data.message, { icon: '🚨' });
-      console.error('Join Room Error:', error.response.data);
+      // Specific error handling for max members reached
+      if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.message || "Cannot join room");
+      } else {
+        toast.error('Failed to join room');
+      }
+      console.error('Join Room Error:', error.response?.data);
+      throw error; // Rethrow to allow caller to handle
     }
   },
 
@@ -104,6 +114,29 @@ export const useRoomStore = create((set,get) => ({
       set({ messages: [] }); 
     } finally {
       set({ isMessagesLoading: false });
+    }
+  },
+
+  subscribeToMemberCount: (roomId) => {
+    const socket = useAuthStore.getState().socket;
+    
+    if (!socket) {
+      return;
+    }
+  
+    socket.emit('joinRoom', roomId);
+    socket.emit('getMemberCount', roomId);
+  
+    socket.on("memberCountUpdate", (count) => {
+      set({ currentMemberCount: count });
+    });
+  },
+
+  // Method to unsubscribe from member count updates
+  unsubscribeFromMemberCount: () => {
+    const socket = useAuthStore.getState().socket;
+    if (socket) {
+      socket.off("memberCountUpdate");
     }
   },
 

@@ -46,14 +46,16 @@ export const joinRoom = async (req, res) => {
   const userId = req.user._id; 
 
   try {
-
     const room = await Room.findById(roomId);
     if (!room) {
       return res.status(404).json({ message: 'Room not found' });
     }
 
+    // Explicit check to prevent joining if max members reached
     if (room.members.length >= room.maxMembers) {
-      return res.status(400).json({ message: 'Room has reached its maximum capacity' });
+      return res.status(400).json({ 
+        message: `Room has reached its maximum capacity of ${room.maxMembers} members` 
+      });
     }
 
     if (room.members.includes(userId)) {
@@ -61,9 +63,17 @@ export const joinRoom = async (req, res) => {
     }
 
     room.members.push(userId);
+    room.currentMemberCount = room.members.length;
     await room.save(); 
 
-    res.status(200).json({ message: 'You have joined the room', room });
+    // Emit member count update to the room
+    io.to(roomId).emit('memberCountUpdate', room.currentMemberCount);
+
+    res.status(200).json({ 
+      message: 'You have joined the room', 
+      room,
+      currentMemberCount: room.currentMemberCount 
+    });
   } catch (error) {
     console.error('Error joining room:', error.message);
     res.status(500).json({ message: 'Server error' });
@@ -86,9 +96,17 @@ export const leaveRoom = async (req, res) => {
     }
 
     room.members = room.members.filter(member => member.toString() !== userId.toString());
+    room.currentMemberCount = room.members.length; // Update member count
     await room.save();
 
-    res.status(200).json({ message: 'You have left the room', room });
+    // Emit member count update to the room
+    io.to(roomId).emit('memberCountUpdate', room.currentMemberCount);
+
+    res.status(200).json({ 
+      message: 'You have left the room', 
+      room,
+      currentMemberCount: room.currentMemberCount 
+    });
   } catch (error) {
     console.error('Error leaving room:', error.message);
     res.status(500).json({ message: 'Server error' });

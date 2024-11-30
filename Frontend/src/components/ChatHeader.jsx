@@ -1,10 +1,21 @@
 import { DoorOpen } from "lucide-react";
 import { useRoomStore } from "../store/useRoomStore";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function ChatHeader({ room }) {
-  const { leaveRoom } = useRoomStore();
+  const { leaveRoom,currentMemberCount,subscribeToMemberCount,unsubscribeFromMemberCount} = useRoomStore();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (room?._id) {
+      subscribeToMemberCount(room._id);
+      
+      return () => {
+        unsubscribeFromMemberCount();
+      };
+    }
+  }, [room?._id]);
 
   const handleClose = () => {
     if (!room?._id) {
@@ -21,6 +32,7 @@ export default function ChatHeader({ room }) {
         <div className="flex items-center gap-3">
           <div>
             <h3 className="font-medium">{room ? room.name : "Loading room..."}</h3>
+            Members {currentMemberCount} / {room?.maxMembers || 0}
           </div>
         </div>
         <div>

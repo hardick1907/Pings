@@ -9,8 +9,14 @@ import { formatMessageTime } from "../lib/utils";
 
 export default function ChatBox() {
   const { id } = useParams();
-  const { rooms, fetchRooms, fetchMessages, messages, isMessagesLoading, subscribeToMessages,unsubscribeToMessages,
-  subscribeToMemberChanges, unsubscribeFromMemberChanges } = useRoomStore();
+  const { 
+    rooms, 
+    fetchRooms, 
+    fetchMessages, 
+    messages, 
+    isMessagesLoading, 
+    subscribeToMessages,
+    unsubscribeToMessages} = useRoomStore();
   const { authUser } = useAuthStore();
   const [room, setRoom] = useState(null);
   const isSubscribedRef = useRef(false);
