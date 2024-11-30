@@ -20,7 +20,6 @@ io.on("connection", (socket) => {
     console.log(`User ${socket.id} joined room ${roomId}`);
   });
 
-  // Optional: Add a listener for member count requests
   socket.on("getMemberCount", async (roomId) => {
     try {
       const room = await Room.findById(roomId);

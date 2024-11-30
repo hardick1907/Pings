@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useRoomStore } from "../store/useRoomStore.js";
 
 export default function MessageInput({ roomId }) {
+  console.log("Room ID:", roomId);
   const { sendMessageToRoom } = useRoomStore();
   const [editor, setEditor] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);

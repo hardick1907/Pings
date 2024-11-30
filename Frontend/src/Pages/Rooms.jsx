@@ -4,11 +4,12 @@ import { useNavigate, Link} from 'react-router-dom';
 import { useRoomStore } from '../store/useRoomStore';
 
 export default function Rooms() {
+    
     const navigate = useNavigate();
-    const { rooms, fetchRooms, isLoading, joinRoom,currentMemberCount} = useRoomStore();
+    const { rooms, fetchRooms, isLoading, joinRoom} = useRoomStore();
 
     useEffect(() => {
-    fetchRooms();
+        fetchRooms();
     }, [fetchRooms]);
 
     const handleClick = (e) => {
@@ -18,15 +19,11 @@ export default function Rooms() {
 
     const handleJoinRoom = async (roomId) => {
         try {
-            // Try to join the room
             const roomData = await joinRoom(roomId);
-            
-            // Only navigate if join is successful
             if (roomData && roomData.room) {
                 navigate(`/room/${roomData.room._id}`);
             }
         } catch (error) {
-            // Error is already handled by toast in joinRoom method
             console.error('Error joining room:', error);
         }
     };
@@ -56,14 +53,14 @@ export default function Rooms() {
                             ) : (
                             <div className="space-y-4">
                                 {rooms.map((room) => (
-                                <div key={room._id}
-                                    className="grid grid-cols-3 p-4 border-b 
-                                        border-base-300 rounded-lg hover:bg-base-200 cursor-pointer">
-                                        <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap md:whitespace-normal">{room.name}</span>
-                                        <span className="text-sm text-base-content/60">Max Members: {room?.maxMembers}</span>
-                                        <button onClick={()=> handleJoinRoom(room._id)} className="btn btn-primary btn-sm">
-                                            Join
-                                        </button>
+                                <div key={room._id} className="grid grid-cols-3 p-4 border-b 
+                                                border-base-300 rounded-lg hover:bg-base-200 cursor-pointer">
+                                    <span
+                                        className="font-medium text-ellipsis overflow-hidden whitespace-nowrap md:whitespace-normal">{room.name}</span>
+                                    <span className="text-sm text-base-content/60">Max Members: {room?.maxMembers}</span>
+                                    <button onClick={()=> handleJoinRoom(room._id)} className="btn btn-primary btn-sm">
+                                        Join
+                                    </button>
                                 </div>
                                 ))}
                             </div>
@@ -74,5 +71,5 @@ export default function Rooms() {
                 </div>
             </div>
         </div>
-    );
+        );
 };

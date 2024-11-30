@@ -51,7 +51,6 @@ export const joinRoom = async (req, res) => {
       return res.status(404).json({ message: 'Room not found' });
     }
 
-    // Explicit check to prevent joining if max members reached
     if (room.members.length >= room.maxMembers) {
       return res.status(400).json({ 
         message: `Room has reached its maximum capacity of ${room.maxMembers} members` 
@@ -96,10 +95,9 @@ export const leaveRoom = async (req, res) => {
     }
 
     room.members = room.members.filter(member => member.toString() !== userId.toString());
-    room.currentMemberCount = room.members.length; // Update member count
+    room.currentMemberCount = room.members.length;
     await room.save();
 
-    // Emit member count update to the room
     io.to(roomId).emit('memberCountUpdate', room.currentMemberCount);
 
     res.status(200).json({ 

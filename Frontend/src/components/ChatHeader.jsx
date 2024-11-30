@@ -3,24 +3,26 @@ import { useRoomStore } from "../store/useRoomStore";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-export default function ChatHeader({ room }) {
-  const { leaveRoom,currentMemberCount,subscribeToMemberCount,unsubscribeFromMemberCount} = useRoomStore();
+export default function ChatHeader() {
+
+  const { selectedRoom: room, leaveRoom, currentMemberCount, subscribeToMemberCount, unsubscribeFromMemberCount } =
+  useRoomStore();
   const navigate = useNavigate();
+
 
   useEffect(() => {
     if (room?._id) {
       subscribeToMemberCount(room._id);
-      
       return () => {
-        unsubscribeFromMemberCount();
+      unsubscribeFromMemberCount();
       };
     }
   }, [room?._id]);
 
   const handleClose = () => {
     if (!room?._id) {
-    console.error("Room ID is missing. Cannot leave the room.");
-    return;
+      console.error("Room ID is missing. Cannot leave the room.");
+      return;
     }
     leaveRoom(room._id);
     navigate("/rooms");
@@ -35,18 +37,7 @@ export default function ChatHeader({ room }) {
             Members {currentMemberCount} / {room?.maxMembers || 0}
           </div>
         </div>
-        <div>
-
-          <div>
-            {room ? (
-            <span>Owner: {room.createdBy?.username || "Unknown"}</span>
-            ) : (
-            <span>Loading...</span>
-            )}
-          </div>
-
-        </div>
-        {room && ( // Only show the button if the room exists
+        {room && (
         <button onClick={handleClose} className="btn btn-primary p-1">
           <div className="flex justify-center items-center gap-2">
             <DoorOpen /> Leave Room
