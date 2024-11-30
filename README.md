@@ -1,5 +1,7 @@
-# Pings 💬  
+# Pings - Real Time Chat Application 💬  
 Pings is a collaborative messaging platform enabling real-time communication within dynamic, user-created chat rooms. Designed for seamless scalability and user experience, Pings includes robust API endpoints and a feature-rich front-end for a modern chat application.
+
+Live Demo - https://pings-b6c8.onrender.com
 
 ## Features ✨  
 - **Real-Time Messaging**: Leverages WebSockets for instant message updates.  
