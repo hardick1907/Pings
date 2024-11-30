@@ -4,7 +4,7 @@ import { useNavigate, Link} from 'react-router-dom';
 import { useRoomStore } from '../store/useRoomStore';
 
 export default function Rooms() {
-    
+
     const navigate = useNavigate();
     const { rooms, fetchRooms, isLoading, joinRoom} = useRoomStore();
 
@@ -18,15 +18,16 @@ export default function Rooms() {
     };
 
     const handleJoinRoom = async (roomId) => {
-        try {
-            const roomData = await joinRoom(roomId);
-            if (roomData && roomData.room) {
-                navigate(`/room/${roomData.room._id}`);
-            }
-        } catch (error) {
-            console.error('Error joining room:', error);
+    try {
+        const roomData = await joinRoom(roomId);
+        if (roomData && roomData.room) {
+        navigate(`/room/${roomData.room._id}`);
         }
+    } catch (error) {
+        console.error('Error joining room:', error);
+    }
     };
+
 
     return (
         <div className="min-h-screen bg-base-200">

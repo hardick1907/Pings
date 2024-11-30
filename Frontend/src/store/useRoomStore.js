@@ -42,11 +42,18 @@ export const useRoomStore = create(
       },
 
       joinRoom: async (roomId) => {
+        const { selectedRoom } = get();
+      
+        if (selectedRoom) {
+          toast.error("You are already in a room!");
+          return;
+        }
+      
         try {
           const res = await axiosInstance.post(`/room/rooms/${roomId}/join`);
           toast.success("Room joined successfully");
-
-          set({ selectedRoom: res.data.room});
+      
+          set({ selectedRoom: res.data.room });
           console.log("Joined room:", res.data.room);
           return res.data;
         } catch (error) {
@@ -59,6 +66,7 @@ export const useRoomStore = create(
           throw error;
         }
       },
+      
 
       leaveRoom: async (roomId) => {
         try {
